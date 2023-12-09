@@ -6,14 +6,14 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
+            <li class="nav-item" v-if="!store.token">
               <nuxt-link to="/register" class="nav-link" :class="{ active: $route == '/register' }" aria-current="page"
                 href="#">Register</nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!store.token">
               <nuxt-link to="/login" class="nav-link" :class="{ active: $route == '/login' }">Login</nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="store.token">
               <button class="nav-link" tabindex="-1" @click="logout">Logout</button>
             </li>
           </ul>

@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 export const userDataStore = defineStore('userData', {
     state: () => ({
-        token: null
+        token: null,
+        userData: null
+
     }),
     actions: {
     }, persist: true,

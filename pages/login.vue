@@ -32,42 +32,45 @@
 </template>
 
 <script setup>
-    import { userDataStore } from '~/store/userData'
-    import { useToast } from 'vue-toastification'
+import { userDataStore } from '~/store/userData'
+import { useToast } from 'vue-toastification'
 
-    const email = ref('')
-    const password = ref('')
-    const store = userDataStore();
-    const toast = useToast()
-    
+const email = ref('')
+const password = ref('')
+const store = userDataStore();
+const toast = useToast()
 
-        const handleSubmit = async() => {
-            
-                let {data} = await useApi('login', {method: 'POST',
-                    body: {
-        
-                    email: email.value,
-                    password: password.value,
-                }});
-                
-                if (data.value) {
-                    store.token = data.value.token
-                    console.log(data.value.token)
-                    // localStorage.setItem('token', response.data.token);
-                    // useLoginStore().updateLoginStatus();
-                    // console.log("login status :  " + useLoginStore().getLoginStatus());
-                    toast.success(
-                    'Logged In Successfully.',
-                    );
-                    navigateTo('/')
-                } else {
-                    toast.error(
-                        'Invalid Login Credentials',
-                    )
-                }
-            } 
 
-        
+const handleSubmit = async () => {
+
+    let { data } = await useApi('login', {
+        method: 'POST',
+        body: {
+
+            email: email.value,
+            password: password.value,
+        }
+    });
+
+    if (data.value) {
+        store.token = data.value.token
+        store.userData = data.value?.userdata
+        console.log(data.value.token)
+        // localStorage.setItem('token', response.data.token);
+        // useLoginStore().updateLoginStatus();
+        // console.log("login status :  " + useLoginStore().getLoginStatus());
+        toast.success(
+            'Logged In Successfully.',
+        );
+        navigateTo('/')
+    } else {
+        toast.error(
+            'Invalid Login Credentials',
+        )
+    }
+}
+
+
 </script>
 
 <style></style>
