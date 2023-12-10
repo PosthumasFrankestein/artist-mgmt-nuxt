@@ -11,12 +11,15 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.8.2",
+    "pinia": "^2.1.7",
     "vue": "^3.3.10",
     "vue-router": "^4.2.5",
-    "@pinia/nuxt": "^0.5.1",
-    "pinia": "^2.1.7",
-    "vue-toastification": "^2.0.0-rc.5",
-    "@pinia-plugin-persistedstate/nuxt": "^1.2.0"
+    "vue-toastification": "^2.0.0-rc.5"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^2.11.0"
   }
 }

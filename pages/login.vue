@@ -56,9 +56,9 @@ const handleSubmit = async () => {
         store.token = data.value.token
         store.userData = data.value?.userdata
         console.log(data.value.token)
-        // localStorage.setItem('token', response.data.token);
-        // useLoginStore().updateLoginStatus();
-        // console.log("login status :  " + useLoginStore().getLoginStatus());
+        localStorage.setItem('token', response.data.token);
+        useLoginStore().updateLoginStatus();
+        console.log("login status :  " + useLoginStore().getLoginStatus());
         toast.success(
             'Logged In Successfully.',
         );

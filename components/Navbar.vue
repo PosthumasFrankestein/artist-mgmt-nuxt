@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <nuxt-link to="/" class="navbar-brand" :class="{ active: $route == '/' }">Home</nuxt-link>
-
+        <nuxt-link to="/userdash" class="nav-link" :class="{ active: $route == '/userdash' }">User Dashboard</nuxt-link>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item" v-if="!store.token">
