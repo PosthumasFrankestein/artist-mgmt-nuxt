@@ -7,6 +7,7 @@
         <router-link to="/login" v-if="!store.token" class="text-white">Login</router-link>
         <router-link to="/userdash" v-if="store.token" class="text-white">User Dashboard</router-link>
         <router-link to="/artist" v-if="store.token" class="text-white">Artist</router-link>
+        <router-link to="/newartist" v-if="store.token" class="text-white">New Artist</router-link>
       </div>
 
       <button v-if="store.token" class="text-white" @click="logout">Logout</button>

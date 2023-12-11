@@ -5,7 +5,7 @@
             <h2>Please register, you are not registered yet.</h2>
         </div>
         <div v-else-if="store.userData">
-            Hello user {{ store.userData?.name }} your emial is {{ store.userData?.email }}. <br>
+            Hello user {{ store.userData?.name }} your email is {{ store.userData?.email }}. <br>
             Your account was created at {{ store.userData?.created_at }} and recently updated at {{
                 store.userData?.updated_at }}.
         </div>
