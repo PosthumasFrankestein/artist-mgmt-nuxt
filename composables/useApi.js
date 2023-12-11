@@ -23,14 +23,12 @@ export async function useApi(
     baseURL: 'http://127.0.0.1:8000/api/',
     ...fetchOpts,
   })
-  /*
-    if (error.value || !data.value?.status) {
-      const toast = useToast()
-      toast.error(data.value?.message || error.value.data.message);
-      return Promise.reject(error)
-    }
-    else {
-      return Promise.resolve({ data, pending, error, refresh })
-    }
-    */
+  if (error.value || !data.value?.status) {
+    const toast = useToast()
+    toast.error(data.value?.message || error.value.data.message);
+    return Promise.reject(error)
+  }
+  else {
+    return Promise.resolve({ data, pending, error, refresh })
+  }
 }
