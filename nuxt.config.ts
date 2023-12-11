@@ -1,18 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  extends: ['@nuxt/ui-pro'],
   modules: [// ...
     '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt',
-    //  '@nuxt/ui', "@nuxtjs/tailwindcss"
+    '@nuxt/ui',
+    //"@nuxtjs/tailwindcss"
   ],
   app: {
     head: {
       link: [
-        {
-          href: "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css",
-          rel: 'stylesheet'
-        }
+        // {
+        //   href: "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css",
+        //   rel: 'stylesheet'
+        // }
 
       ],
       /*      script: [

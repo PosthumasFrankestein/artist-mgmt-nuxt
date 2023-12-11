@@ -1,78 +1,93 @@
-<!-- components/MyTable.vue -->
-<template>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Users</h2>
+<script setup>
+const columns = [{
+    key: 'name',
+    label: 'Name'
+}, {
+    key: 'title',
+    label: 'Title'
+}, {
+    key: 'email',
+    label: 'Email'
+}, {
+    key: 'role',
+    label: 'Role'
+}, {
+    key: 'actions'
+}]
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="user in users" :key="user.id">
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.role }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</template>
-  
-<script>
-export default {
-    data() {
-        return {
-            users: [
-                { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-                { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-                // Add more user data as needed
-            ],
-        };
-    },
-};
+const people = [{
+    id: 1,
+    name: 'Lindsay Walton',
+    title: 'Front-end Developer',
+    email: 'lindsay.walton@example.com',
+    role: 'Member'
+}, {
+    id: 2,
+    name: 'Courtney Henry',
+    title: 'Designer',
+    email: 'courtney.henry@example.com',
+    role: 'Admin'
+}, {
+    id: 3,
+    name: 'Tom Cook',
+    title: 'Director of Product',
+    email: 'tom.cook@example.com',
+    role: 'Member'
+}, {
+    id: 4,
+    name: 'Whitney Francis',
+    title: 'Copywriter',
+    email: 'whitney.francis@example.com',
+    role: 'Admin'
+}, {
+    id: 5,
+    name: 'Leonard Krasner',
+    title: 'Senior Designer',
+    email: 'leonard.krasner@example.com',
+    role: 'Owner'
+}, {
+    id: 6,
+    name: 'Floyd Miles',
+    title: 'Principal Designer',
+    email: 'floyd.miles@example.com',
+    role: 'Member'
+}]
+
+const items = (row) => [
+    [{
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        click: () => console.log('Edit', row.id)
+    }, {
+        label: 'Duplicate',
+        icon: 'i-heroicons-document-duplicate-20-solid'
+    }], [{
+        label: 'Archive',
+        icon: 'i-heroicons-archive-box-20-solid'
+    }, {
+        label: 'Move',
+        icon: 'i-heroicons-arrow-right-circle-20-solid'
+    }], [{
+        label: 'Delete',
+        icon: 'i-heroicons-trash-20-solid'
+    }]
+]
+
+const selected = ref([people[1]])
 </script>
-  
-<style scoped>
-/* Additional styling to make the table look prettier */
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-}
 
-.table {
-    font-size: 16px;
-}
+<template>
+    <UTable v-model="selected" :rows="people" :columns="columns">
+        <template #name-data="{ row }">
+            <span :class="[selected.find(person => person.id === row.id) && 'text-primary-500 dark:text-primary-400']">{{
+                row.name }}</span>
+        </template>
 
-.table th,
-.table td {
-    text-align: center;
-}
+        <template #actions-data="{ row }">
+            <UDropdown :items="items(row)">
+                <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+        </template>
+    </UTable>
+</template>
 
-.table-hover tbody tr:hover {
-    background-color: #f5f5f5;
-}
-
-.table-light th,
-.table-light td,
-.table-light thead th {
-    background-color: #f8f9fa;
-}
-
-.table-bordered {
-    border: 1px solid #dee2e6;
-}
-
-.table th,
-.table td {
-    padding: 12px;
-}
-</style>
-  

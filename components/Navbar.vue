@@ -1,59 +1,29 @@
 <template>
-  <div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <nuxt-link to="/" class="navbar-brand" :class="{ active: $route == '/' }">Home</nuxt-link>
-
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item" v-if="!store.token">
-              <nuxt-link to="/register" class="nav-link" :class="{ active: $route == '/register' }" aria-current="page"
-                href="#">Register</nuxt-link>
-            </li>
-            <li class="nav-item" v-if="!store.token">
-              <nuxt-link to="/login" class="nav-link" :class="{ active: $route == '/login' }">Login</nuxt-link>
-            </li>
-            <li class="nav-item" v-if="!store.token">
-              <nuxt-link to="/userdash" class="nav-link" :class="{ active: $route == '/userdash' }">User
-                Dashboard</nuxt-link>
-            </li>
-            <li class="nav-item" v-if="!store.token">
-              <nuxt-link to="/artist" class="nav-link" :class="{ active: $route == '/artist' }">Artist</nuxt-link>
-            </li>
-            <li class="nav-item" v-if="store.token">
-              <button class="nav-link" tabindex="-1" @click="logout">Logout</button>
-            </li>
-          </ul>
-
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-        </div>
+  <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-6">
+        <router-link to="/" class="text-white font-semibold mr-6">Home</router-link>
+        <router-link to="/register" class="text-white">Register</router-link>
+        <router-link to="/login" class="text-white">Login</router-link>
+        <router-link to="/userdash" class="text-white">User Dashboard</router-link>
+        <router-link to="/artist" class="text-white">Artist</router-link>
       </div>
-    </nav>
 
-    <!-- <h1>{{ loginstatus }}</h1> -->
-  </div>
+      <button v-if="store.token" class="text-white" @click="logout">Logout</button>
+    </div>
+  </nav>
 </template>
-    
-<script setup>
-import { userDataStore } from '~/store/userData'
-const store = userDataStore();
-const logout = async () => {
-  useApi('logout').then(() => {
-    store.token = null
-    navigateTo('/')
-  })
-}
 
+
+
+<script setup>
+import { userDataStore } from '~/store/userData';
+
+const store = userDataStore();
+
+const logout = async () => {
+  await useApi('logout');
+  store.token = null;
+  this.$router.push('/');
+};
 </script>
-    
-<style>
-.nuxt-link-active {
-  font-size: large !important;
-  font-weight: bold !important;
-  color: white !important;
-}
-</style>
