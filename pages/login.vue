@@ -55,23 +55,16 @@ const handleSubmit = async () => {
         store.token = data.value.token
         store.userData = data.value?.userdata
         console.log(data.value.token)
-        // localStorage.setItem('token', response.data.token);
-        // useLoginStore().updateLoginStatus();
-        // console.log("login status :  " + useLoginStore().getLoginStatus());
         toast.success(
             'Logged In Successfully.',
         );
         navigateTo('/')
     } else {
-        // toast.error(
-        //     'Invalid Login Credentials',
-        // )
+        toast.error(
+            'Invalid Login Credentials',
+        )
 
-        toast.success(
-            'Logged In Successfully.',
-        );
-        navigateTo('/')
-        store.token = '12241414141'
+
     }
 }
 
