@@ -30,10 +30,12 @@ const fetchPeople = async () => {
             store.allUserData = data.value?.data;
             pending.value = false;
         } else {
+            pending.value = false;
             toast.error('Something Went Wrong');
         }
     } catch (error) {
         console.error(error);
+        pending.value = false;
         toast.error('Failed to fetch user data');
     }
 };
@@ -70,6 +72,9 @@ const totalItems = computed(() => (store.allUserData ? store.allUserData.length 
 
 
 <template>
+    <UButton icon="i-heroicons-pencil-square" size="sm" color="blue" variant="solid" label="Import" :trailing="false"
+        to="/artistimport" />
+    <UButton icon="i-heroicons-pencil-square" size="sm" color="red" variant="solid" label="Export" :trailing="false" />
     <div class="overflow-x-auto">
         <UTable v-model="selected" :rows="currentPageItems" :columns="columns" :loading="pending">
             <template #loading-state>
@@ -96,8 +101,10 @@ const totalItems = computed(() => (store.allUserData ? store.allUserData.length 
             </template>
         </UTable>
     </div>
-    <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-        <UPagination v-model="page" :page-count="10" :total="totalItems" />
+
+    <div>
+        <UPagination class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700" v-model="page"
+            :page-count="10" :total="totalItems" />
     </div>
 </template>
 
