@@ -71,6 +71,9 @@ const totalItems = computed(() => (store.allUserData ? store.allUserData.length 
 
 <template>
     <div class="overflow-x-auto">
+        <UButton icon="i-heroicons-pencil-square" size="sm" color="blue" variant="solid" label="Import" :trailing="false"
+            to="/artistimport" />
+        <UButton icon="i-heroicons-pencil-square" size="sm" color="red" variant="solid" label="Export" :trailing="false" />
         <UTable v-model="selected" :rows="currentPageItems" :columns="columns" :loading="pending">
             <template #loading-state>
                 <div class="flex items-center justify-center h-32">

@@ -25,9 +25,8 @@ export async function useApi(
   })
   if (error.value || !data.value?.status) {
     const toast = useToast()
-    // toast.error(data.value?.message || error.value?.message || 'Something is wrong');
-    // return Promise.reject(error)
-    return true
+    toast.error(data.value?.message || error.value?.message || 'Something is wrong');
+    return Promise.reject(data || error.value?.message)
   }
   else {
     return Promise.resolve({ data, pending, error, refresh })

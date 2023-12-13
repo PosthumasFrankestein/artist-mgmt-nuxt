@@ -1,6 +1,7 @@
 <script setup>
-import { useToast } from 'vue-toastification';
 import { userDataStore } from '~/store/userData';
+
+import { useToast } from 'vue-toastification';
 const toast = useToast();
 
 const store = userDataStore();
@@ -72,9 +73,6 @@ const totalItems = computed(() => (store.allUserData ? store.allUserData.length 
 
 
 <template>
-    <UButton icon="i-heroicons-pencil-square" size="sm" color="blue" variant="solid" label="Import" :trailing="false"
-        to="/artistimport" />
-    <UButton icon="i-heroicons-pencil-square" size="sm" color="red" variant="solid" label="Export" :trailing="false" />
     <div class="overflow-x-auto">
         <UTable v-model="selected" :rows="currentPageItems" :columns="columns" :loading="pending">
             <template #loading-state>
