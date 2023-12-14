@@ -42,7 +42,7 @@
   
 <script setup>
 import Papa from 'papaparse';
-import { userDataStore } from '~/store/userData';
+// import { userDataStore } from '~/store/userData';
 
 import { useToast } from 'vue-toastification';
 const toast = useToast();
@@ -54,7 +54,6 @@ const pageCount = 10;
 const pending = ref(true);
 const selected = ref([''])
 const sucessRec = ref([''])
-const failRec = ref([''])
 
 const columns =
     [
@@ -124,24 +123,67 @@ const uploadToTable = async () => {
 
         if (data.value?.status) {
             toast.success('Bulk Insert Successful');
+            const successRecords = data.value?.success_records;
+            sucessRec.value = successRecords;
+
+            sucessRec.value.forEach((selectedRow) => {
+                const index = currentPageItems.value.findIndex((item) => item === selectedRow);
+                if (index !== -1) {
+                    currentPageItems.value.splice(index, 1);
+                    csvData.value.splice(index, 1);
+                }
+            });
             selected.value = [];
+
         } else {
             toast.error('Bulk Insert Failed. Some records may not have been inserted.');
+            const successRecords = data.value?.success_records;
+            sucessRec.value = successRecords;
+
+            sucessRec.value.forEach((selectedRow) => {
+                const index = currentPageItems.value.findIndex((item) => item === selectedRow);
+                if (index !== -1) {
+                    currentPageItems.value.splice(index, 1);
+                    csvData.value.splice(index, 1);
+                }
+            });
+            selected.value = [];
         }
-        sucessRec.value = data.value?.success_records
     } catch (error) {
         console.error('Error during bulk insert:', error);
         toast.error('An error occurred during bulk insert.');
-        sucessRec.value = error.value.success_records
     }
-    sucessRec.value.forEach((selectedRow) => {
-        const index = currentPageItems.value.findIndex((item) => item === selectedRow);
-        if (index !== -1) {
-            currentPageItems.value.splice(index, 1);
-            csvData.value.splice(index, 1);
-        }
-    });
-
 };
 
+
 </script>
+
+<!-- <template>
+    <div>
+        <UButton label="Open" @click="isOpen = true" />
+
+        <UModal v-model="isOpen" fullscreen>
+            <UCard :ui="{
+                base: 'h-full flex flex-col',
+                rounded: '',
+                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                body: {
+                    base: 'grow'
+                }
+            }">
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                            Modal
+                        </h3>
+                        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                            @click="isOpen = false" />
+                    </div>
+                </template>
+
+                <Placeholder class="h-full" />
+            </UCard>
+        </UModal>
+    </div>
+</template>
+ -->

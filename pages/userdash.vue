@@ -8,6 +8,9 @@ const store = userDataStore();
 
 const pending = ref(true)
 const selected = ref([''])
+const isOpen = ref(false)
+const selectedRow = ref(null);
+
 
 const columns = [
     { key: 'id', label: 'Id' },
@@ -44,19 +47,22 @@ const fetchPeople = async () => {
 // Fetch initial data
 fetchPeople();
 
-const items = (row) => [
+const items = (row) =>
     [
-        {
-            label: 'Edit',
-            icon: 'i-heroicons-pencil-square-20-solid',
-            click: () => toggleEdit(row),
-        },
-    ],
-    [{ label: 'Delete', icon: 'i-heroicons-trash-20-solid' }],
-];
+        [
+            {
+                label: 'Edit',
+                icon: 'i-heroicons-pencil-square-20-solid',
+                click: () => toggleEdit(row)
+                //isOpen.value = true,
+            },
+        ],
+        [{ label: 'Delete', icon: 'i-heroicons-trash-20-solid' }],
+    ];
 
 const toggleEdit = (row) => {
-    // Implement the toggleEdit function if needed
+    isOpen.value = true;
+    selectedRow.value = row;
 };
 
 const page = ref(1);
@@ -68,6 +74,14 @@ const currentPageItems = computed(() => {
 
 const totalItems = computed(() => (store.allUserData ? store.allUserData.length : 0));
 
+const getCurrentDate = () => {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = today.getMonth() + 1 // months are 0-indexed
+    const day = today.getDate()
+
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+}
 
 </script>
 
@@ -82,19 +96,14 @@ const totalItems = computed(() => (store.allUserData ? store.allUserData.length 
             </template>
 
             <template #name-data="{ row }">
-                <span :class="[
-                    selected.find(person => person.id === row.id) &&
-                    'text-primary-500 dark:text-primary-400',
-                ]" class="sm:block md:inline lg:inline xl:inline" v-if="!row.editable" @click="toggleEdit(row)">
-                    {{ row.fname }}
-                </span>
-                <input v-model="row.fname" v-else />
+                <span
+                    :class="[selected.find(person => person.id === row.id) && 'text-primary-500 dark:text-primary-400']">{{
+                        row.name }}</span>
             </template>
 
             <template #actions-data="{ row }">
                 <UDropdown :items="items(row)">
-                    <UButton @click="toggleEdit(row)" color="gray" variant="ghost"
-                        icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                 </UDropdown>
             </template>
         </UTable>
@@ -104,11 +113,82 @@ const totalItems = computed(() => (store.allUserData ? store.allUserData.length 
         <UPagination class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700" v-model="page"
             :page-count="10" :total="totalItems" />
     </div>
+
+    <div>
+        <UModal v-model="isOpen">
+            <UCard :ui="{
+                base: 'h-full flex flex-col',
+                rounded: '',
+                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                body: {
+                    base: 'grow'
+                }
+            }">
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                            Edit User
+                        </h3>
+                        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                            @click="isOpen = false" />
+                    </div>
+
+                </template>
+
+
+                <div class="flex justify-content-center">
+                    <form @submit.prevent="handleRegister"
+                        class="mx-auto border-2 border-black rounded-lg w-96 p-8 bg-white">
+
+                        <div class="mb-3">
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.fname"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.lname"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="w-full p-2 border border-gray-300 rounded"
+                                v-model="selectedRow.email" required autocomplete="off" />
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" class="w-full p-2 border border-gray-300 rounded"
+                                v-model="selectedRow.phone" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of
+                                Birth</label>
+                            <input type="date" id="date_of_birth" class="w-full p-2 border border-gray-300 rounded"
+                                :max="getCurrentDate()" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                            <select id="gender" class="w-full p-2 border border-gray-300 rounded" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded"
+                                v-model="selectedRow.address" required />
+                        </div>
+                        <div class="flex items-center justify-end space-x-2">
+                            <UButton color="green">Save Changes</UButton>
+                            <UButton color="red" @click="isOpen = false">Cancel</UButton>
+                        </div>
+                    </form>
+
+
+                </div>
+            </UCard>
+        </UModal>
+    </div>
 </template>
 
 <style scoped>
-/* https://codepen.io/jenning/pen/YzNmzaV */
-
 .loader {
     --color: rgb(var(--color-primary-400));
     --size-mid: 6vmin;
