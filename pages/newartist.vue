@@ -39,6 +39,22 @@
                     <input type="text" v-model="address" class="w-full p-2 border border-gray-300 rounded"
                         placeholder="Address" required />
                 </div>
+                <div class="mb-3">
+                    <input type="number" v-model="first_release_year" class="w-full p-2 border border-gray-300 rounded"
+                        placeholder="first_release_year" required />
+                </div>
+                <div class="mb-3">
+                    <input type="number" v-model="no_of_albums_released" class="w-full p-2 border border-gray-300 rounded"
+                        placeholder="no_of_albums_released" required />
+                </div>
+                <div class="mb-3">
+                    <input type="password" v-model="password" class="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Password" required />
+                </div>
+                <div class="mb-3">
+                    <input type="password" v-model="password_confirmation" class="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Confirm Password" required />
+                </div>
                 <div class="mb-3 flex items-center">
                     <input type="checkbox" class="mr-2" v-model="rememberMe" />
                     <label>Remember me</label>
@@ -52,6 +68,8 @@
     
 <script setup>
 import { useToast } from 'vue-toastification'
+import { userDataStore } from '~/store/userData';
+const store = userDataStore();
 const toast = useToast()
 const email = ref('')
 const fname = ref('')
@@ -64,6 +82,13 @@ const address = ref('')
 const password_confirmation = ref('')
 const rememberMe = ref(false)
 const error_message = ref(null)
+const no_of_albums_released = ref('')
+const first_release_year = ref('')
+
+//Allow only artist manager
+if (store.userData.role != "artistmanager") {
+    navigateTo('/')
+}
 
 const getCurrentDate = () => {
     const today = new Date()
@@ -85,6 +110,9 @@ const handleRegister = async () => {
         password: password.value,
         address: address.value,
         password_confirmation: password_confirmation.value,
+        first_release_year: first_release_year.value,
+        no_of_albums_released: no_of_albums_released.value,
+        id: store.userData.id
     }
 
     await useApi(`addartist`, {
@@ -95,7 +123,7 @@ const handleRegister = async () => {
             error_message.value = ''
             console.log(response)
             toast.success('Great Success!!')
-            navigateTo('/login')
+            navigateTo('/artist')
         })
         .catch(err => {
             console.log(err)

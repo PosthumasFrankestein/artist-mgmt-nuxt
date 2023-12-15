@@ -40,16 +40,20 @@
                         placeholder="Address" required />
                 </div>
                 <div class="mb-3">
+                    <label for="gender" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select v-model="role" id="gender" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="">Select Role</option>
+                        <option value="artistmanager">Artist Manager</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="mb-3">
                     <input type="password" v-model="password" class="w-full p-2 border border-gray-300 rounded"
                         placeholder="Password" required />
                 </div>
                 <div class="mb-3">
                     <input type="password" v-model="password_confirmation" class="w-full p-2 border border-gray-300 rounded"
                         placeholder="Confirm Password" required />
-                </div>
-                <div class="mb-3 flex items-center">
-                    <input type="checkbox" class="mr-2" v-model="rememberMe" required />
-                    <label>Remember me</label>
                 </div>
                 <button class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700" type="submit">Register</button>
             </form>
@@ -68,8 +72,8 @@ const gender = ref('')
 const date_of_birth = ref('')
 const password = ref('')
 const address = ref('')
+const role = ref('')
 const password_confirmation = ref('')
-const rememberMe = ref(false)
 const error_message = ref(null)
 
 const getCurrentDate = () => {
@@ -91,6 +95,7 @@ const handleRegister = async () => {
         date_of_birth: date_of_birth.value,
         password: password.value,
         address: address.value,
+        role: role.value,
         password_confirmation: password_confirmation.value,
     }
 
@@ -101,8 +106,7 @@ const handleRegister = async () => {
         .then(response => {
             error_message.value = ''
             console.log(response)
-            toast.success('Great Success!!')
-            navigateTo('/login')
+            toast.success('User Added')
         })
         .catch(err => {
             console.log(err)

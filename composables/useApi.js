@@ -23,6 +23,7 @@ export async function useApi(
     baseURL: 'http://127.0.0.1:8000/api/',
     ...fetchOpts,
   })
+
   if (error.value || !data.value?.status) {
     const toast = useToast()
     toast.error(data.value?.message || error.value?.message || 'Something is wrong');

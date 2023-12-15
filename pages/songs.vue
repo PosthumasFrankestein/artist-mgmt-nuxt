@@ -10,25 +10,30 @@ const pending = ref(true)
 const selected = ref([''])
 const isOpen = ref(false)
 const isOpen1 = ref(false)
+const isOpen2 = ref(false)
+
 const selectedRow = ref(null);
+const genre = ref('')
+const album = ref('')
+const title = ref('')
 
 
 const columns = [
     { key: 'id', label: 'Id' },
-    { key: 'fname', label: 'First Name', sortable: true },
-    { key: 'lname', label: 'Last Name', sortable: true },
-    { key: 'email', label: 'Email', sortable: true },
-    { key: 'phone', label: 'phone' },
-    { key: 'date_of_birth', label: 'DOB' },
-    { key: 'gender', label: 'Gender' },
-    { key: 'role', label: 'Role' },
+    { key: 'title', label: 'Title', sortable: true },
+    { key: 'album', label: 'Album Name', sortable: true },
+    { key: 'genre', label: 'Genre', sortable: true },
+    { key: 'artist_name', label: 'Artist' },
     { key: 'actions' },
 ];
 
-const fetchPeople = async () => {
+const fetchSongs = async () => {
     try {
-        const { data } = await useApi('fetch_all_userdata', {
-            method: 'GET',
+        const { data } = await useApi('fetch_all_song', {
+            method: 'POST',
+            body: {
+                "id": store.artistId
+            }
         });
 
         if (data.value) {
@@ -46,11 +51,11 @@ const fetchPeople = async () => {
 };
 
 // Fetch initial data
-fetchPeople();
+fetchSongs();
 
-const deleteUser = async () => {
+const deleteSong = async () => {
     try {
-        const { data } = await useApi('deleteUser', {
+        const { data } = await useApi('deleteSong', {
             method: 'PUT',
             body: {
                 'email': selectedRow.value.email,
@@ -70,9 +75,36 @@ const deleteUser = async () => {
     }
 };
 
-const updateUser = async () => {
-    console.log("Here")
+const addSong = async () => {
+    const submit_data = {
+        artist: "3",
+        // store.artistId,
+        album: album.value,
+        genre: genre.value,
+        title: title.value,
+        signature: "insert",
+    }
 
+    try {
+        const { data } = await useApi('save_song', {
+            method: 'POST',
+            body: submit_data
+            ,
+        });
+
+        if (data.value) {
+            // store.allUserData = data.value?.data;
+            toast.sucess('User Updated.');
+        } else {
+            toast.error('Something Went Wrong');
+        }
+    } catch (error) {
+        console.error(error);
+        toast.error('Failed to fetch user data');
+    }
+};
+
+const updateUser = async () => {
     const submit_data = {
         id: selectedRow.value.id,
         fname: selectedRow.value.fname,
@@ -115,7 +147,7 @@ const items = (row) =>
         [{
             label: 'Delete', icon: 'i-heroicons-trash-20-solid',
             click: () => deleteRow(row)
-        }],
+        }]
     ];
 
 const toggleEdit = (row) => {
@@ -155,6 +187,12 @@ const getCurrentDate = () => {
             <template #loading-state>
                 <div class="flex items-center justify-center h-32">
                     <i class="loader --6" />
+                </div>
+            </template>
+            <template #empty-state>
+                <div class="flex flex-col items-center justify-center py-6 gap-3">
+                    <span class="italic text-sm">No Songs!</span>
+                    <UButton label="Add Songs" @click="isOpen2 = true" />
                 </div>
             </template>
 
@@ -204,48 +242,85 @@ const getCurrentDate = () => {
                         class="mx-auto border-2 border-black rounded-lg w-96 p-8 bg-white">
 
                         <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.fname"
-                                required />
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Title"
+                                v-model="selectedRow.title" required />
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.lname"
-                                required />
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Album"
+                                v-model="selectedRow.album" required />
                         </div>
                         <div class="mb-3">
-                            <input type="email" class="w-full p-2 border border-gray-300 rounded"
-                                v-model="selectedRow.email" required autocomplete="off" />
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.phone"
-                                required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of
-                                Birth</label>
-                            <input type="date" id="date_of_birth" class="w-full p-2 border border-gray-300 rounded"
-                                :max="getCurrentDate()" v-model="selectedRow.date_of_birth" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                            <label for="gender" class="block text-sm font-medium text-gray-700">Genre</label>
                             <select id="gender" class="w-full p-2 border border-gray-300 rounded"
-                                v-model="selectedRow.gender" required>
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
+                                v-model="selectedRow.genre" required>
+                                <option value="">Select genre</option>
+                                <option value="rnb">rnb</option>
+                                <option value="country">country</option>
+                                <option value="classical">classical</option>
+                                <option value="rock">rock</option>
+                                <option value="jazz">jazz</option>
                             </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded"
-                                v-model="selectedRow.address" required />
                         </div>
                         <div class="flex items-center justify-end space-x-2">
                             <UButton color="green" @click="updateUser(row)">Save Changes</UButton>
                             <UButton color="red" @click="isOpen = false">Cancel</UButton>
                         </div>
                     </form>
+                </div>
+            </UCard>
+        </UModal>
+    </div>
+
+    <div>
+        <UModal v-model="isOpen2">
+            <UCard :ui="{
+                base: 'h-full flex flex-col',
+                rounded: '',
+                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                body: {
+                    base: 'grow'
+                }
+            }">
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                            Edit User
+                        </h3>
+                        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                            @click="isOpen2 = false" />
+                    </div>
+
+                </template>
 
 
+                <div class="flex justify-content-center">
+                    <form @submit.prevent="handleRegister"
+                        class="mx-auto border-2 border-black rounded-lg w-96 p-8 bg-white">
+
+                        <div class="mb-3">
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Title"
+                                v-model="title" required />
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Album"
+                                v-model="album" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="genre" class="block text-sm font-medium text-gray-700">Genre</label>
+                            <select id="genre" class="w-full p-2 border border-gray-300 rounded" v-model="genre" required>
+                                <option value="">Select genre</option>
+                                <option value="rnb">rnb</option>
+                                <option value="country">country</option>
+                                <option value="classical">classical</option>
+                                <option value="rock">rock</option>
+                                <option value="jazz">jazz</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-end space-x-2">
+                            <UButton color="green" @click="addSong(row)">Add Song</UButton>
+                            <UButton color="red" @click="isOpen2 = false">Cancel</UButton>
+                        </div>
+                    </form>
                 </div>
             </UCard>
         </UModal>
@@ -275,7 +350,7 @@ const getCurrentDate = () => {
 
                 <div class="flex justify-content-center">
                     <div class="flex items-center justify-end space-x-2">
-                        <UButton color="green" @click="deleteUser(row)">Confirm</UButton>
+                        <UButton color="green" @click="deleteSong(row)">Confirm</UButton>
                         <UButton color="red" @click="isOpen1 = false">Cancel</UButton>
                     </div>
                 </div>
