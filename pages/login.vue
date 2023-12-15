@@ -54,8 +54,9 @@ const handleSubmit = async () => {
     if (data?.value) {
         store.token = data.value.token
         store.userData = data.value?.userdata
+        debugger;
         if (store.userData.role == 'artist') {
-            store.artistId = store.userData.artistId
+            store.artistId = store.userData.artist_id
         }
         console.log(data.value.token)
         toast.success(

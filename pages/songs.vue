@@ -58,8 +58,7 @@ const deleteSong = async () => {
         const { data } = await useApi('deleteSong', {
             method: 'PUT',
             body: {
-                'email': selectedRow.value.email,
-                tablename: 'users'
+                'musicId': selectedRow.value.id,
             },
         });
 
@@ -77,8 +76,7 @@ const deleteSong = async () => {
 
 const addSong = async () => {
     const submit_data = {
-        artist: "3",
-        // store.artistId,
+        artist: store.artistId,
         album: album.value,
         genre: genre.value,
         title: title.value,
@@ -104,21 +102,19 @@ const addSong = async () => {
     }
 };
 
-const updateUser = async () => {
+const updateSong = async () => {
     const submit_data = {
-        id: selectedRow.value.id,
-        fname: selectedRow.value.fname,
-        lname: selectedRow.value.lname,
-        email: selectedRow.value.email,
-        phone: selectedRow.value.phone,
-        gender: selectedRow.value.gender,
-        date_of_birth: selectedRow.value.date_of_birth,
-        address: selectedRow.value.address,
+        artist: store.artistId,
+        album: selectedRow.value.album,
+        genre: selectedRow.value.genre,
+        title: selectedRow.value.title,
+        music_id: selectedRow.value.id,
+        signature: "update",
     }
 
     try {
-        const { data } = await useApi('updateUser', {
-            method: 'PUT',
+        const { data } = await useApi('save_song', {
+            method: 'POST',
             body: submit_data
             ,
         });
@@ -153,6 +149,7 @@ const items = (row) =>
 const toggleEdit = (row) => {
     isOpen.value = true;
     selectedRow.value = row;
+    console.log(selectedRow.value)
 };
 
 const deleteRow = (row) => {
@@ -262,7 +259,7 @@ const getCurrentDate = () => {
                             </select>
                         </div>
                         <div class="flex items-center justify-end space-x-2">
-                            <UButton color="green" @click="updateUser(row)">Save Changes</UButton>
+                            <UButton color="green" @click="updateSong(row)">Save Changes</UButton>
                             <UButton color="red" @click="isOpen = false">Cancel</UButton>
                         </div>
                     </form>
