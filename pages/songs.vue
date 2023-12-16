@@ -212,10 +212,13 @@ const getCurrentDate = () => {
             </template>
 
             <template #actions-data="{ row }">
-                <UDropdown :items="items(row)">
+                <UDropdown :items="items(row)"
+                    :class="{ 'class-name': store.token && store?.userData?.role === 'artist', 'hide_class': store.token && store?.userData?.role !== 'artist' }">
                     <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                 </UDropdown>
             </template>
+
+
         </UTable>
     </div>
 
@@ -233,7 +236,8 @@ const getCurrentDate = () => {
                 body: {
                     base: 'grow'
                 }
-            }">
+            }
+                ">
                 <template #header>
                     <div class="flex items-center justify-between">
                         <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
@@ -289,7 +293,8 @@ const getCurrentDate = () => {
                 body: {
                     base: 'grow'
                 }
-            }">
+            }
+                ">
                 <template #header>
                     <div class="flex items-center justify-between">
                         <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
@@ -344,7 +349,8 @@ const getCurrentDate = () => {
                 body: {
                     base: 'grow'
                 }
-            }">
+            }
+                ">
                 <template #header>
                     <div class="flex items-center justify-between">
                         <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
@@ -398,6 +404,11 @@ const getCurrentDate = () => {
     left: calc(50% - var(--size-square));
     animation: loader-6 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite;
 }
+
+.hide_class {
+    display: none;
+}
+
 
 @keyframes loader-6 {
 
