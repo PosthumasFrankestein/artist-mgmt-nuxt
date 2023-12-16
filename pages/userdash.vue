@@ -9,6 +9,7 @@ const store = userDataStore();
 const pending = ref(true)
 const selected = ref([''])
 const isOpen = ref(false)
+const isOpen1 = ref(false)
 const selectedRow = ref(null);
 
 
@@ -40,6 +41,56 @@ const fetchPeople = async () => {
     } catch (error) {
         console.error(error);
         pending.value = false;
+        toast.error('Failed to fetch user data');
+    }
+};
+
+const deleteUser = async () => {
+    try {
+        const { data } = await useApi('deleteUser', {
+            method: 'PUT',
+            body: {
+                'email': selectedRow.value.email,
+                tablename: 'users'
+            },
+        });
+        if (data.value) {
+            // store.allUserData = data.value?.data;
+            toast.sucess('Good');
+        } else {
+            toast.error('Something Went Wrong');
+        }
+    } catch (error) {
+        console.error(error);
+        toast.error('Failed to fetch user data');
+    }
+};
+const updateUser = async () => {
+    console.log("Here")
+    const submit_data = {
+        id: selectedRow.value.id,
+        fname: selectedRow.value.fname,
+        lname: selectedRow.value.lname,
+        email: selectedRow.value.email,
+        phone: selectedRow.value.phone,
+        gender: selectedRow.value.gender,
+        date_of_birth: selectedRow.value.date_of_birth,
+        address: selectedRow.value.address,
+    }
+    try {
+        const { data } = await useApi('updateUser', {
+            method: 'PUT',
+            body: submit_data
+            ,
+        });
+        if (data.value) {
+            // store.allUserData = data.value?.data;
+            toast.sucess('User Updated.');
+        } else {
+            toast.error('Something Went Wrong');
+        }
+    } catch (error) {
+        console.error(error);
         toast.error('Failed to fetch user data');
     }
 };

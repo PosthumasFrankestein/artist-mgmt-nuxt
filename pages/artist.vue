@@ -12,11 +12,13 @@ const isOpen1 = ref(false)
 const selectedRow = ref(null);
 
 const columns = [
-    { key: 'id', label: 'Artist Manager ID' },
-    { key: 'name', label: 'Name', sortable: true },
+    { key: 'artist_id', label: 'Artist ID' },
+    { key: 'manager_id', label: 'Artist Manager ID' },
+    { key: 'fname', label: 'First Name', sortable: true },
+    { key: 'lname', label: 'Last Name', sortable: true },
     { key: 'email', label: 'Email', sortable: true },
     { key: 'phone', label: 'phone' },
-    { key: 'dob', label: 'DOB' },
+    { key: 'date_of_birth', label: 'DOB' },
     { key: 'gender', label: 'Gender' },
     { key: 'address', label: 'Address' },
     { key: 'first_release_year', label: 'First Release Year' },
@@ -203,11 +205,12 @@ const getCurrentDate = () => {
                         </div>
                         <div class="mb-3">
                             <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
-                            <select id="gender" class="w-full p-2 border border-gray-300 rounded" required>
+                            <select v-model="selectedRow.gender" id="gender"
+                                class="w-full p-2 border border-gray-300 rounded" required>
                                 <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="mb-3">
