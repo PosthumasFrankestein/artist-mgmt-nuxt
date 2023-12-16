@@ -12,7 +12,10 @@ const isOpen = ref(false)
 const isOpen1 = ref(false)
 const selectedRow = ref(null);
 
-
+//Allow only artist manager
+if (store.userData.role != "admin") {
+    navigateTo('/')
+}
 
 
 const columns = [

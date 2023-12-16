@@ -37,6 +37,11 @@ if (store.token) {
         }
     }, 1000);
 }
+else {
+    setTimeout(() => {
+        navigateTo('/login')
+    }, 5000);
+}
 </script>
   
 <style scoped>

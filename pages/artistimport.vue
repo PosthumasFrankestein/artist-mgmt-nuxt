@@ -57,6 +57,10 @@ const pending = ref(true);
 const selected = ref([''])
 const sucessRec = ref([''])
 
+if (store.userData.role != "artistmanager") {
+    navigateTo('/')
+}
+
 const columns =
     [
         { key: 'fname', label: 'First Name', sortable: true },

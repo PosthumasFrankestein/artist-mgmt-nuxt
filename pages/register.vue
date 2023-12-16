@@ -76,6 +76,10 @@ const role = ref('')
 const password_confirmation = ref('')
 const error_message = ref(null)
 
+if (store.userData.role != "admin") {
+    navigateTo('/')
+}
+
 const getCurrentDate = () => {
     const today = new Date()
     const year = today.getFullYear()

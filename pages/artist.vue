@@ -30,7 +30,9 @@ const columns = [
     { key: 'actions' },
 ];
 
-
+if (!store.token) {
+    navigateTo('/')
+}
 
 
 const deleteUser = async () => {

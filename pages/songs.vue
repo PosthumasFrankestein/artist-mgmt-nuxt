@@ -17,6 +17,9 @@ const genre = ref('')
 const album = ref('')
 const title = ref('')
 
+if (!store.token) {
+    navigateTo('/')
+}
 
 const columns = [
     { key: 'id', label: 'Id' },
@@ -65,7 +68,8 @@ const deleteSong = async () => {
         if (data.value) {
             // store.allUserData = data.value?.data;
             toast.success('Song Deleted');
-            isOpen1 = false;
+            isOpen1.value = false;
+            fetchSongs();
         } else {
             toast.error('Something Went Wrong');
         }
@@ -94,7 +98,8 @@ const addSong = async () => {
         if (data.value) {
             // store.allUserData = data.value?.data;
             toast.success('Song Added.');
-            isOpen2 = false;
+            isOpen2.value = false;
+            fetchSongs();
         } else {
             toast.error('Something Went Wrong');
         }
@@ -124,7 +129,8 @@ const updateSong = async () => {
         if (data.value) {
             // store.allUserData = data.value?.data;
             toast.success('Song Updated.');
-            isOpen = false;
+            isOpen.value = false;
+            fetchSongs();
         } else {
             toast.error('Something Went Wrong');
         }
@@ -183,6 +189,9 @@ const getCurrentDate = () => {
 
 <template>
     <div class="overflow-x-auto">
+        <div v-if="store.token && store?.userData?.role === 'artist'">
+            <UButton label="Add Songs" @click="isOpen2 = true" />
+        </div>
         <UTable v-model="selected" :rows="currentPageItems" :columns="columns" :loading="pending">
             <template #loading-state>
                 <div class="flex items-center justify-center h-32">
