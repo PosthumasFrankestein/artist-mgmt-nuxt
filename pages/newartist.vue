@@ -40,24 +40,12 @@
                         placeholder="Address" required />
                 </div>
                 <div class="mb-3">
-                    <input type="number" v-model="first_release_year" class="w-full p-2 border border-gray-300 rounded"
-                        placeholder="first_release_year" required />
-                </div>
-                <div class="mb-3">
-                    <input type="number" v-model="no_of_albums_released" class="w-full p-2 border border-gray-300 rounded"
-                        placeholder="no_of_albums_released" required />
-                </div>
-                <div class="mb-3">
                     <input type="password" v-model="password" class="w-full p-2 border border-gray-300 rounded"
                         placeholder="Password" required />
                 </div>
                 <div class="mb-3">
                     <input type="password" v-model="password_confirmation" class="w-full p-2 border border-gray-300 rounded"
                         placeholder="Confirm Password" required />
-                </div>
-                <div class="mb-3 flex items-center">
-                    <input type="checkbox" class="mr-2" v-model="rememberMe" />
-                    <label>Remember me</label>
                 </div>
                 <button class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700" type="submit">Add New
                     Artist</button>
@@ -80,10 +68,7 @@ const date_of_birth = ref('')
 const password = ref('')
 const address = ref('')
 const password_confirmation = ref('')
-const rememberMe = ref(false)
 const error_message = ref(null)
-const no_of_albums_released = ref('')
-const first_release_year = ref('')
 
 //Allow only artist manager
 if (store.userData.role != "artistmanager") {
@@ -110,12 +95,11 @@ const handleRegister = async () => {
         password: password.value,
         address: address.value,
         password_confirmation: password_confirmation.value,
-        first_release_year: first_release_year.value,
-        no_of_albums_released: no_of_albums_released.value,
-        id: store.userData.id
+        role: 'artist',
+        man_id: store.userData.id
     }
 
-    await useApi(`addartist`, {
+    await useApi(`register`, {
         method: 'POST',
         body: submit_data,
     })

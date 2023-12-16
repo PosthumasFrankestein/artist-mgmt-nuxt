@@ -13,6 +13,8 @@ const isOpen1 = ref(false)
 const selectedRow = ref(null);
 
 
+
+
 const columns = [
     { key: 'id', label: 'Id' },
     { key: 'fname', label: 'First Name', sortable: true },
@@ -56,7 +58,8 @@ const deleteUser = async () => {
         });
         if (data.value) {
             // store.allUserData = data.value?.data;
-            toast.sucess('Good');
+            toast.success('User Deleted');
+            isOpen1.value = false;
         } else {
             toast.error('Something Went Wrong');
         }
@@ -83,9 +86,11 @@ const updateUser = async () => {
             body: submit_data
             ,
         });
+
         if (data.value) {
             // store.allUserData = data.value?.data;
-            toast.sucess('User Updated.');
+            toast.success('User Updated.');
+            isOpen.value = false;
         } else {
             toast.error('Something Went Wrong');
         }
@@ -108,7 +113,7 @@ const items = (row) =>
                 //isOpen.value = true,
             },
         ],
-        [{ label: 'Delete', icon: 'i-heroicons-trash-20-solid' }],
+        [{ label: 'Delete', icon: 'i-heroicons-trash-20-solid', click: () => deleteRow(row) }],
     ];
 
 const toggleEdit = (row) => {
@@ -116,8 +121,14 @@ const toggleEdit = (row) => {
     selectedRow.value = row;
 };
 
+const deleteRow = (row) => {
+    isOpen1.value = true;
+    selectedRow.value = row;
+};
+
 const page = ref(1);
 const pageCount = 10;
+
 
 const currentPageItems = computed(() => {
     return store.allUserData ? store.allUserData.slice((page.value - 1) * pageCount, page.value * pageCount) : [];
@@ -165,78 +176,6 @@ const getCurrentDate = () => {
             :page-count="10" :total="totalItems" />
     </div>
 
-    <div>
-        <UModal v-model="isOpen1">
-            <UCard :ui="{
-                base: 'h-full flex flex-col',
-                rounded: '',
-                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-                body: {
-                    base: 'grow'
-                }
-            }">
-                <template #header>
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-                            Edit User
-                        </h3>
-                        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-                            @click="isOpen = false" />
-                    </div>
-
-                </template>
-
-
-                <div class="flex justify-content-center">
-                    <form @submit.prevent="handleRegister"
-                        class="mx-auto border-2 border-black rounded-lg w-96 p-8 bg-white">
-
-                        <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.fname"
-                                required />
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded" v-model="selectedRow.lname"
-                                required />
-                        </div>
-                        <div class="mb-3">
-                            <input type="email" class="w-full p-2 border border-gray-300 rounded"
-                                v-model="selectedRow.email" required autocomplete="off" />
-                        </div>
-                        <div class="mb-3">
-                            <input type="number" class="w-full p-2 border border-gray-300 rounded"
-                                v-model="selectedRow.phone" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of
-                                Birth</label>
-                            <input type="date" id="date_of_birth" class="w-full p-2 border border-gray-300 rounded"
-                                :max="getCurrentDate()" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
-                            <select id="gender" class="w-full p-2 border border-gray-300 rounded" required>
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="w-full p-2 border border-gray-300 rounded"
-                                v-model="selectedRow.address" required />
-                        </div>
-                        <div class="flex items-center justify-end space-x-2">
-                            <UButton color="green">Save Changes</UButton>
-                            <UButton color="red" @click="isOpen = false">Cancel</UButton>
-                        </div>
-                    </form>
-
-
-                </div>
-            </UCard>
-        </UModal>
-    </div>
     <div>
         <UModal v-model="isOpen">
             <UCard :ui="{
@@ -287,11 +226,12 @@ const getCurrentDate = () => {
                         </div>
                         <div class="mb-3">
                             <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
-                            <select id="gender" class="w-full p-2 border border-gray-300 rounded" required>
+                            <select v-model="selectedRow.gender" id="gender"
+                                class="w-full p-2 border border-gray-300 rounded" required>
                                 <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -299,12 +239,44 @@ const getCurrentDate = () => {
                                 v-model="selectedRow.address" required />
                         </div>
                         <div class="flex items-center justify-end space-x-2">
-                            <UButton color="green">Save Changes</UButton>
+                            <UButton color="green" @click="updateUser()">Save Changes</UButton>
                             <UButton color="red" @click="isOpen = false">Cancel</UButton>
                         </div>
                     </form>
 
 
+                </div>
+            </UCard>
+        </UModal>
+    </div>
+
+    <div>
+        <UModal v-model="isOpen1">
+            <UCard :ui="{
+                base: 'h-full flex flex-col',
+                rounded: '',
+                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                body: {
+                    base: 'grow'
+                }
+            }">
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                            Are you sure you want to delete?
+                        </h3>
+                        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                            @click="isOpen1 = false" />
+                    </div>
+
+                </template>
+
+
+                <div class="flex justify-content-center">
+                    <div class="flex items-center justify-end space-x-2">
+                        <UButton color="green" @click="deleteUser(row)">Confirm</UButton>
+                        <UButton color="red" @click="isOpen1 = false">Cancel</UButton>
+                    </div>
                 </div>
             </UCard>
         </UModal>

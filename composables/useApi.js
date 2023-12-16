@@ -2,6 +2,9 @@
 import { userDataStore } from '~/store/userData'
 import { useToast } from 'vue-toastification'
 
+const toast = useToast()
+
+
 export async function useApi(
   request,
   options) {
@@ -25,9 +28,8 @@ export async function useApi(
   })
 
   if (error.value || !data.value?.status) {
-    const toast = useToast()
-    toast.error(data.value?.message || error.value?.message || 'Something is wrong');
-    return Promise.reject(data || error.value?.message)
+    toast.error(data.value?.message || error.value.data.message);
+    return Promise.reject(error)
   }
   else {
     return Promise.resolve({ data, pending, error, refresh })

@@ -42,7 +42,9 @@
   
 <script setup>
 import Papa from 'papaparse';
-// import { userDataStore } from '~/store/userData';
+import { userDataStore } from '~/store/userData';
+
+const store = userDataStore();
 
 import { useToast } from 'vue-toastification';
 const toast = useToast();
@@ -57,8 +59,9 @@ const sucessRec = ref([''])
 
 const columns =
     [
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'dob', label: 'DOB', sortable: true },
+        { key: 'fname', label: 'First Name', sortable: true },
+        { key: 'lname', label: 'Last Name', sortable: true },
+        { key: 'date_of_birth', label: 'DOB', sortable: true },
         { key: 'gender', label: 'Gender' },
         { key: 'address', label: 'Address' },
         { key: 'email', label: 'Email', sortable: true },
@@ -117,7 +120,8 @@ const uploadToTable = async () => {
         const { data } = await useApi('bulkInsert', {
             method: 'PUT',
             body: {
-                selectedRows: selected.value.slice(1),
+                selectedRows: selected.value.slice(1), manager_id: store.userData.id,
+
             },
         });
 

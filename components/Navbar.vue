@@ -8,7 +8,8 @@
         <router-link to="/login" v-if="!store.token" class="text-white">Login</router-link>
         <router-link to="/userdash" v-if="store.token && store?.userData?.role === 'admin'" class="text-white">User
           Dashboard</router-link>
-        <router-link to="/artist" v-if="store.token" class="text-white">Artist</router-link>
+        <router-link to="/artist" v-if="store.token && store?.userData?.role != 'artist'"
+          class="text-white">Artist</router-link>
         <router-link to="/songs" v-if="store.token && store?.userData?.role === 'artist'" class="text-white">Songs
           Dashboard</router-link>
         <router-link to="/newartist" v-if="store.token && store?.userData?.role == 'artistmanager'" class="text-white">New

@@ -64,7 +64,8 @@ const deleteSong = async () => {
 
         if (data.value) {
             // store.allUserData = data.value?.data;
-            toast.sucess('Good');
+            toast.success('Song Deleted');
+            isOpen1 = false;
         } else {
             toast.error('Something Went Wrong');
         }
@@ -92,7 +93,8 @@ const addSong = async () => {
 
         if (data.value) {
             // store.allUserData = data.value?.data;
-            toast.sucess('User Updated.');
+            toast.success('Song Added.');
+            isOpen2 = false;
         } else {
             toast.error('Something Went Wrong');
         }
@@ -121,7 +123,8 @@ const updateSong = async () => {
 
         if (data.value) {
             // store.allUserData = data.value?.data;
-            toast.sucess('User Updated.');
+            toast.success('Song Updated.');
+            isOpen = false;
         } else {
             toast.error('Something Went Wrong');
         }
@@ -186,7 +189,7 @@ const getCurrentDate = () => {
                     <i class="loader --6" />
                 </div>
             </template>
-            <template #empty-state>
+            <template #empty-state v-if="store.token && store?.userData?.role === 'artist'">
                 <div class="flex flex-col items-center justify-center py-6 gap-3">
                     <span class="italic text-sm">No Songs!</span>
                     <UButton label="Add Songs" @click="isOpen2 = true" />

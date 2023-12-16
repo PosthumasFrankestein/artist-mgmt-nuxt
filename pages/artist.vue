@@ -1,12 +1,16 @@
 <script setup>
+
 import { useToast } from 'vue-toastification';
 import { userDataStore } from '~/store/userData';
+
+import Papa from 'papaparse';
+
 const store = userDataStore();
 const toast = useToast();
 
 
 const pending = ref(true)
-const selected = ref([''])
+const selected = ref(['0'])
 const isOpen = ref(false)
 const isOpen1 = ref(false)
 const selectedRow = ref(null);
@@ -27,6 +31,8 @@ const columns = [
 ];
 
 
+
+
 const deleteUser = async () => {
     try {
         const { data } = await useApi('deleteUser', {
@@ -39,7 +45,7 @@ const deleteUser = async () => {
 
         if (data.value) {
             // store.allUserData = data.value?.data;
-            toast.sucess('Good');
+            toast.success('user Deleted');
         } else {
             toast.error('Something Went Wrong');
         }
@@ -48,6 +54,8 @@ const deleteUser = async () => {
         toast.error('Failed to fetch user data');
     }
 };
+
+
 
 const fetchArtist = async () => {
     try {
@@ -69,6 +77,36 @@ const fetchArtist = async () => {
 
 // Fetch initial data
 fetchArtist();
+
+const updateUser = async () => {
+    console.log("Here")
+    const submit_data = {
+        id: selectedRow.value.id,
+        fname: selectedRow.value.fname,
+        lname: selectedRow.value.lname,
+        email: selectedRow.value.email,
+        phone: selectedRow.value.phone,
+        gender: selectedRow.value.gender,
+        date_of_birth: selectedRow.value.date_of_birth,
+        address: selectedRow.value.address,
+    }
+    try {
+        const { data } = await useApi('updateUser', {
+            method: 'PUT',
+            body: submit_data
+            ,
+        });
+        if (data.value) {
+            // store.allUserData = data.value?.data;
+            toast.success('User Updated.');
+        } else {
+            toast.error('Something Went Wrong');
+        }
+    } catch (error) {
+        console.error(error);
+        toast.error('Failed to fetch user data');
+    }
+};
 
 const items = (row) =>
     [
@@ -101,7 +139,7 @@ const deleteRow = (row) => {
 
 const getSongs = (row) => {
     selectedRow.value = row;
-    store.artistId = row.id
+    store.artistId = row.artist_id
     navigateTo("/songs")
 };
 
@@ -123,6 +161,47 @@ const getCurrentDate = () => {
     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
 }
 
+// Export CSV file
+const exportToCSV = () => {
+    const labels = columns.map(column => column.key);
+    const headers = labels.filter(key => key !== undefined);
+
+    // Create an array to store the data with headers
+    let export_array = [headers];
+
+    // Add selected rows to the export array
+    selected.value.forEach(selectedRow => {
+        const row = headers.map(header => selectedRow[header] || '');
+        export_array.push(row);
+    });
+
+    // Use Papa.unparse with custom headers
+    const csv = Papa.unparse(export_array, {
+        header: true,
+    });
+
+    // Create and trigger the download
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+
+    if (navigator.msSaveBlob) {
+        // IE 10+
+        navigator.msSaveBlob(blob, 'artist_data.csv');
+    } else {
+        // Other browsers
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = 'artist_data.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+};
+
+
+
+
 </script>
 
 
@@ -130,7 +209,8 @@ const getCurrentDate = () => {
     <div class="overflow-x-auto">
         <UButton icon="i-heroicons-pencil-square" size="sm" color="blue" variant="solid" label="Import" :trailing="false"
             to="/artistimport" />
-        <UButton icon="i-heroicons-pencil-square" size="sm" color="red" variant="solid" label="Export" :trailing="false" />
+        <UButton icon=" i-heroicons-pencil-square" size="sm" color="red" variant="solid" label="Export" :trailing="false"
+            @click.prevent="exportToCSV" />
         <UTable v-model="selected" :rows="currentPageItems" :columns="columns" :loading="pending">
             <template #loading-state>
                 <div class="flex items-center justify-center h-32">
@@ -218,7 +298,7 @@ const getCurrentDate = () => {
                                 v-model="selectedRow.address" required />
                         </div>
                         <div class="flex items-center justify-end space-x-2">
-                            <UButton color="green">Save Changes</UButton>
+                            <UButton color="green" @click="updateUser()">Save Changes</UButton>
                             <UButton color="red" @click="isOpen = false">Cancel</UButton>
                         </div>
                     </form>

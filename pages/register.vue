@@ -97,6 +97,7 @@ const handleRegister = async () => {
         address: address.value,
         role: role.value,
         password_confirmation: password_confirmation.value,
+        man_id: '1'
     }
 
     await useApi(`register`, {
